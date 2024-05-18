@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Update Email{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Change Email</h2>
+
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-outline-dark">Change Email</button>
+    </form>
+</div>
+
+{% endblock %}
