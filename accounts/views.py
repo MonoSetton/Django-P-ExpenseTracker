@@ -4,6 +4,8 @@ from django.contrib.auth import login, logout
 from .forms import UserRegisterForm, UpdateUsername, UpdateEmail, ChangePasswordForm
 from .decorators import unauthenticated_user
 from django.contrib.auth import authenticate
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 @unauthenticated_user
@@ -51,7 +53,7 @@ def update_username(request):
         form = UpdateUsername(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('/profile')
+            return redirect('/profile/')
     else:
         form = UpdateUsername()
 
@@ -65,8 +67,13 @@ def update_email(request):
         form = UpdateEmail(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('/profile')
+            return redirect('/profile/')
     else:
         form = UpdateEmail()
 
     return render(request, 'accounts/update_email.html', {'form': form})
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'accounts/profile.html'
+    login_url = 'login/'

@@ -11,5 +11,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', unauthenticated_user(LoginView.as_view()), name='login'),
     path('', include('accounts.urls')),
+    path('', include('core.urls')),
     path('', include('django.contrib.auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
