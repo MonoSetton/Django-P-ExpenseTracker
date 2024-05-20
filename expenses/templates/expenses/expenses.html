@@ -1,9 +1,41 @@
 {% extends 'base.html' %}
 {% block title %} Expenses {% endblock %}
-
+{% load static %}
 {% block content %}
-<a href="{% url 'create_expense' %}">Add expense</a>
-{% for expense in expenses %}
-    {{ expense }}
-{% endfor %}
+
+<link rel="stylesheet" href="{% static 'css/expenses.css' %}">
+
+<a href="{% url 'create_expense' %}">Create expense</a>
+<h1>Expense List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.amount }}</td>
+                    <td>{{ expense.category.name }}</td>
+                    <td>{{ expense.date }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'update_expense' expense.id %}">
+                                <button class="edit-btn">Edit</button>
+                            </a>
+                            <a href="{% url 'delete_expense' expense.id %}" style="display:inline;">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
