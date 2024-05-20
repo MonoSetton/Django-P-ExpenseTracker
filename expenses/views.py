@@ -10,7 +10,7 @@ class ExpensesView(LoginRequiredMixin, ListView):
     model = Expense
     context_object_name = 'expenses'
     template_name = 'expenses/expenses.html'
-    login_url = 'login/'
+    login_url = '/login/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,7 +23,7 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
     template_name = 'expenses/create_expense.html'
     form_class = ExpenseCreationForm
     success_url = reverse_lazy('expenses')
-    login_url = 'login/'
+    login_url = '/login/'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -40,7 +40,7 @@ class UpdateExpenseView(LoginRequiredMixin, UpdateView):
     form_class = ExpenseUpdateForm
     template_name = 'expenses/update_expense.html'
     success_url = reverse_lazy('expenses')
-    login_url = 'login/'
+    login_url = '/login/'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -53,7 +53,7 @@ class DeleteExpenseView(LoginRequiredMixin, DeleteView):
     context_object_name = 'expense'
     template_name = 'expenses/delete_expense.html'
     success_url = reverse_lazy('expenses')
-    login_url = 'login/'
+    login_url = '/login/'
 
 
 class CreateCategoryView(LoginRequiredMixin, CreateView):
@@ -61,7 +61,7 @@ class CreateCategoryView(LoginRequiredMixin, CreateView):
     template_name = 'expenses/create_category.html'
     form_class = CategoryCreationForm
     success_url = reverse_lazy('list_categories')
-    login_url = 'login/'
+    login_url = '/login/'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -72,7 +72,7 @@ class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
     context_object_name = 'categories'
     template_name = 'expenses/list_categories.html'
-    login_url = 'login/'
+    login_url = '/login/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -85,7 +85,7 @@ class UpdateCategoryView(LoginRequiredMixin, UpdateView):
     fields = ['name']
     template_name = 'expenses/update_category.html'
     success_url = reverse_lazy('list_categories')
-    login_url = 'login/'
+    login_url = '/login/'
 
 
 class DeleteCategoryView(LoginRequiredMixin, DeleteView):
@@ -93,4 +93,4 @@ class DeleteCategoryView(LoginRequiredMixin, DeleteView):
     context_object_name = 'category'
     template_name = 'expenses/delete_category.html'
     success_url = reverse_lazy('list_categories')
-    login_url = 'login/'
+    login_url = '/login/'

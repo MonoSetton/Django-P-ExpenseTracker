@@ -7,5 +7,5 @@ class HomeView(LoginRequiredMixin, ListView):
     model = Expense
     context_object_name = 'expenses'
     template_name = 'core/home.html'
-    login_url = 'login/'
+    login_url = '/login/'
 

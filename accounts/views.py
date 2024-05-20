@@ -1,79 +1,65 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
-from .forms import UserRegisterForm, UpdateUsername, UpdateEmail, ChangePasswordForm
-from .decorators import unauthenticated_user
-from django.contrib.auth import authenticate
-from django.views.generic import TemplateView
+from django.shortcuts import redirect
+from django.contrib.auth import login
+from .forms import UserRegisterForm, UpdateUsername, UpdateEmail
+from django.views.generic import TemplateView, UpdateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 
 
-@unauthenticated_user
-def sign_up(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('/')
-    else:
-        form = UserRegisterForm()
-
-    return render(request, 'registration/signup.html', {'form': form})
+class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
+    redirect_field_name = True
+    fields = '__all__'
+    success_url = reverse_lazy('expenses')
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('/')
+class SignupView(FormView):
+    template_name = 'registration/signup.html'
+    form_class = UserRegisterForm
+    success_url = reverse_lazy('expenses')
+
+    def form_valid(self, form):
+        user = form.save()
+        if user is not None:
+            login(self.request, user)
+        return super(SignupView, self).form_valid(form)
+
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('expenses')
+        return super(CustomLoginView, self).get(*args, **kwargs)
 
 
-@login_required(login_url='/login')
-def change_password(request):
-    if request.method == 'POST':
-        form = ChangePasswordForm(request.POST, request=request)
-        if form.is_valid():
-            newpassword = form.cleaned_data['newpassword1']
-            username = request.user.username
-            password = form.cleaned_data['oldpassword']
-
-            user = authenticate(username=username, password=password)
-            user.set_password(newpassword)
-            user.save()
-            return redirect('/')
-    else:
-        form = ChangePasswordForm()
-    context = {'form': form}
-    return render(request, 'accounts/change_password.html', context)
+class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
+    template_name = 'accounts/change_password.html'
+    login_url = '/login/'
+    success_url = reverse_lazy('profile')
 
 
-@login_required(login_url='/login')
-def update_username(request):
-    user = request.user
-    if request.method == 'POST':
-        form = UpdateUsername(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('/profile/')
-    else:
-        form = UpdateUsername()
+class UpdateUsernameView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UpdateUsername
+    template_name = 'accounts/update_username.html'
+    login_url = '/login/'
+    success_url = reverse_lazy('profile')
 
-    return render(request, 'accounts/update_username.html', {'form': form})
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
-@login_required(login_url='/login')
-def update_email(request):
-    user = request.user
-    if request.method == 'POST':
-        form = UpdateEmail(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('/profile/')
-    else:
-        form = UpdateEmail()
+class UpdateEmailView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UpdateEmail
+    template_name = 'accounts/update_email.html'
+    login_url = '/login/'
+    success_url = reverse_lazy('profile')
 
-    return render(request, 'accounts/update_email.html', {'form': form})
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/profile.html'
-    login_url = 'login/'
+    login_url = '/login/'
