@@ -15,9 +15,10 @@ class Category(models.Model):
 class Expense(models.Model):
     name = models.CharField(max_length=150)
     date = models.DateField(default=datetime.date.today)
-    amount = models.FloatField(validators=[
-            MinValueValidator(0.0001)
-        ])
+    amount = models.DecimalField(max_digits=10, decimal_places=2,
+                                 validators=[
+                                     MinValueValidator(0.01)
+                                 ])
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 

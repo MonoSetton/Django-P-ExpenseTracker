@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Category, Expense
 from .forms import ExpenseCreationForm, CategoryCreationForm, ExpenseUpdateForm
 from django.urls import reverse_lazy
+from django.db.models import Sum
 
 
 class ExpensesView(LoginRequiredMixin, ListView):
@@ -14,7 +15,16 @@ class ExpensesView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        total_amount = Expense.objects.filter(author=self.request.user).aggregate(Sum('amount'))['amount__sum'] or 0
+        context['total_amount'] = total_amount
         context['expenses'] = context['expenses'].filter(author=self.request.user)
+
+        search_input = self.request.GET.get('search-area') or ''
+        if search_input:
+            context['expenses'] = context['expenses'].filter(name__icontains=search_input)
+
+        context['search_input'] = search_input
+
         return context
 
 

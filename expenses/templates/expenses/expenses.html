@@ -4,6 +4,12 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/expenses.css' %}">
+<p>Total amount spent: -{{ total_amount }}</p>
+
+<form method="GET">
+    <input type="text" name="search-area" value="{{ search_input }}">
+    <input type="submit" value="Search">
+</form>
 
 <h1>Expense List</h1>
 <a href="{% url 'create_expense' %}" class="btn btn-primary mb-3">Add Expense</a>
