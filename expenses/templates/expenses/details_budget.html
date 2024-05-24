@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %} Details of {{ budget }} {% endblock %}
+{% load static %}
+{% block content %}
+
+name: {{ budget.name }} <br>
+amount to spend: {{ budget.amount_to_spend }}<br>
+start date: {{ budget.start_date }}<br>
+end date: {{ budget.end_date }}<br>
+
+<a href="{% url 'update_budget' budget.id %}">Update budget</a>
+<a href="{% url 'delete_budget' budget.id %}">Delete budget</a>
+{% endblock %}

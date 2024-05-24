@@ -1,10 +1,41 @@
 {% extends 'base.html' %}
 {% block title %} Home {% endblock %}
-
+{% load static %}
 {% block content %}
-Home
-{% for expense in expenses %}
-    {{ expense }}
-{% endfor %}
+
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<div class="alert alert-info">
+    <strong>Total amount spent last month: </strong>${{ total_amount }}
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="scrollable-container">
+            <div class="table-responsive scrollable-table">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expense in expenses %}
+                            <tr>
+                                <td>{{ expense.name }}</td>
+                                <td>${{ expense.amount }}</td>
+                                <td>{{ expense.category.name }}</td>
+                                <td>{{ expense.date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

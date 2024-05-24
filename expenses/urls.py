@@ -10,4 +10,10 @@ urlpatterns = [
     path('update_category/<str:pk>', views.UpdateCategoryView.as_view(), name='update_category'),
     path('delete_category/<str:pk>', views.DeleteCategoryView.as_view(), name='delete_category'),
     path('list_categories/', views.CategoryListView.as_view(), name='list_categories'),
+    path('budgets/', views.BudgetView.as_view(), name='budgets'),
+    path('budget_details/<str:pk>', views.DetailsBudgetView.as_view(), name='budget_details'),
+    path('create_budgets/', views.CreateBudgetView.as_view(), name='create_budget'),
+    path('update_budget/<str:pk>', views.UpdateBudgetView.as_view(), name='update_budget'),
+    path('delete_budgets/<str:pk>', views.DeleteBudgetView.as_view(), name='delete_budget'),
+
     ]
