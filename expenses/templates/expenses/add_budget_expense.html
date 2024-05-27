@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Expense to Budget{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Add Expense to Budget</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Add Expense</button>
+    </form>
+</div>
+{% endblock %}

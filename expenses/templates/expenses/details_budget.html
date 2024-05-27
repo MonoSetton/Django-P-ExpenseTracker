@@ -3,11 +3,52 @@
 {% load static %}
 {% block content %}
 
-name: {{ budget.name }} <br>
-amount to spend: {{ budget.amount_to_spend }}<br>
-start date: {{ budget.start_date }}<br>
-end date: {{ budget.end_date }}<br>
+<div class="container mt-5">
+    <h1>{{ budget.name }}</h1>
+    <p>Created by: {{ budget.author }}</p>
+    <p>Amount to allocate: {{ budget.amount_to_spend }}</p>
+    <h2>Categories</h2>
+    <ul>
+        {% for budget_category in budget.budgetcategory_set.all %}
+            <li>{{ budget_category.category.name }}: {{ budget_category.value }}</li>
+        {% endfor %}
+    </ul>
 
-<a href="{% url 'update_budget' budget.id %}">Update budget</a>
-<a href="{% url 'delete_budget' budget.id %}">Delete budget</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in budget_expenses %}
+                <tr>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.amount }}</td>
+                    <td>{{ expense.category.name }}</td>
+                    <td>{{ expense.date }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'update_expense' expense.id %}">
+                                <button class="edit-btn">Edit</button>
+                            </a>
+                            <a href="{% url 'delete_expense' expense.id %}" style="display:inline;">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'update_budget' budget.id %}" class="btn btn-primary">Update budget</a>
+    <a href="{% url 'delete_budget' budget.id %}" class="btn btn-primary">Delete budget</a>
+    <a href="{% url 'add_category_to_budget' budget.pk %}" class="btn btn-primary">Add Category</a>
+    <a href="{% url 'add_expense_to_budget' budget.pk %}" class="btn btn-primary">Add Expense</a>
+</div>
 {% endblock %}

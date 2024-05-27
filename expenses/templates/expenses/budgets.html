@@ -4,9 +4,11 @@
 {% block content %}
 
 Budgets
+
 <a href="{% url 'create_budget' %}" class="btn btn-primary mb-3">Add Budget</a>
+<br>
 {% for budget in budgets %}
-    {{ budget }} <a href="{% url 'budget_details' budget.id %}">Details</a>
+    {{ budget }} <a href="{% url 'budget_details' budget.id %}">Details</a> <br>
 {% endfor %}
 
 {% endblock %}

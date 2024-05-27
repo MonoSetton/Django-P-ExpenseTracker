@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Expense, Category, Budget
+from .models import Expense, Category, Budget, BudgetCategory, BudgetExpense
 from django import forms
 import datetime
 from django.contrib.auth.models import User
@@ -25,7 +25,7 @@ class ExpenseForm(ModelForm):
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'budget']
+        fields = ['name']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
@@ -45,3 +45,26 @@ class BudgetForm(ModelForm):
     class Meta:
         model = Budget
         fields = ['name', 'amount_to_spend', 'start_date', 'end_date']
+
+
+class BudgetCategoryForm(ModelForm):
+    class Meta:
+        model = BudgetCategory
+        fields = ['category', 'value']
+
+
+class BudgetExpenseForm(ModelForm):
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        initial=datetime.date.today
+    )
+
+    class Meta:
+        model = BudgetExpense
+        fields = ['name', 'date', 'amount', 'category']
+
+    def __init__(self, *args, **kwargs):
+        budget = kwargs.pop('budget', None)
+        super().__init__(*args, **kwargs)
+        if budget is not None:
+            self.fields['category'].queryset = BudgetCategory.objects.filter(budget=budget)

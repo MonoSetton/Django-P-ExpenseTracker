@@ -2,10 +2,11 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Category, Expense, Budget
-from .forms import ExpenseForm, CategoryForm, BudgetForm
+from .models import Category, Expense, Budget, BudgetCategory, BudgetExpense
+from .forms import ExpenseForm, CategoryForm, BudgetForm, BudgetCategoryForm, BudgetExpenseForm
 from django.urls import reverse_lazy
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
 
 
 class ExpensesView(LoginRequiredMixin, ListView):
@@ -39,6 +40,23 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class CreateBudgetExpenseView(LoginRequiredMixin, CreateView):
+    model = BudgetExpense
+    template_name = 'expenses/add_budget_expense.html'
+    form_class = BudgetExpenseForm
+    success_url = reverse_lazy('budgets')
+    login_url = '/login/'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['budget'] = Budget.objects.get(pk=self.kwargs['pk'])
         return kwargs
 
     def form_valid(self, form):
@@ -175,3 +193,19 @@ class DeleteBudgetView(LoginRequiredMixin, DeleteView):
     template_name = 'expenses/delete_budget.html'
     success_url = reverse_lazy('budgets')
     login_url = '/login/'
+
+
+class AddCategoryToBudget(LoginRequiredMixin, CreateView):
+    model = BudgetCategory
+    form_class = BudgetCategoryForm
+    context_object_name = 'budget'
+    template_name = 'expenses/add_budget_category.html'
+    success_url = reverse_lazy('budgets')
+    login_url = '/login/'
+
+    def form_valid(self, form):
+        budget = get_object_or_404(Budget, pk=self.kwargs['pk'])
+        form.instance.budget = budget
+        return super().form_valid(form)
+
+
