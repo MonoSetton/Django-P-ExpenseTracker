@@ -37,5 +37,27 @@
         </div>
     </div>
 </div>
-
+<h3>Budgets</h3>
+<div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Amount to Spend</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for budget in budgets %}
+          <tr>
+            <td>{{ budget.name }}</td>
+            <td>{{ budget.amount_to_spend }}</td>
+            <td>{{ budget.start_date }}</td>
+            <td>{{ budget.end_date }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
 {% endblock %}

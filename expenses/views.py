@@ -64,6 +64,32 @@ class CreateBudgetExpenseView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+class UpdateBudgetExpenseView(LoginRequiredMixin, UpdateView):
+    model = BudgetExpense
+    form_class = BudgetExpenseForm
+    template_name = 'expenses/update_expense.html'
+    success_url = reverse_lazy('budgets')
+    login_url = '/login/'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        budget_expense = self.get_object()
+        kwargs['budget'] = budget_expense.category.budget
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class DeleteBudgetExpenseView(LoginRequiredMixin, DeleteView):
+    model = BudgetExpense
+    context_object_name = 'expense'
+    template_name = 'expenses/delete_expense.html'
+    success_url = reverse_lazy('budgets')
+    login_url = '/login/'
+
+
 class UpdateExpenseView(LoginRequiredMixin, UpdateView):
     model = Expense
     form_class = ExpenseForm
@@ -157,6 +183,24 @@ class DetailsBudgetView(LoginRequiredMixin, DetailView):
     template_name = 'expenses/details_budget.html'
     context_object_name = 'budget'
     login_url = '/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        budget = self.get_object()
+        context['budget_expenses'] = BudgetExpense.objects.filter(category__budget=budget)
+
+        category_totals = []
+        budget_categories = BudgetCategory.objects.filter(budget=budget)
+        for budget_category in budget_categories:
+            total_amount = BudgetExpense.objects.filter(category=budget_category).aggregate(Sum('amount'))['amount__sum'] or 0
+            category_totals.append({
+                'category': budget_category.category.name,
+                'total_amount': total_amount,
+                'category_budget': budget_category.value
+            })
+
+        context['category_totals'] = category_totals
+        return context
 
 
 class CreateBudgetView(LoginRequiredMixin, CreateView):

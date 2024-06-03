@@ -3,6 +3,8 @@
 {% load static %}
 {% block content %}
 
+<link rel="stylesheet" href="{% static 'css/expenses.css' %}">
+
 <div class="container mt-5">
     <h1>{{ budget.name }}</h1>
     <p>Created by: {{ budget.author }}</p>
@@ -11,6 +13,10 @@
     <ul>
         {% for budget_category in budget.budgetcategory_set.all %}
             <li>{{ budget_category.category.name }}: {{ budget_category.value }}</li>
+        {% endfor %}
+        {% for category_info in category_totals %}
+            <h4>{{ category_info.category }}</h4>
+            <progress value="{{ category_info.total_amount }}" max="{{ category_info.category_budget }}"></progress>
         {% endfor %}
     </ul>
 
@@ -29,14 +35,14 @@
                 <tr>
                     <td>{{ expense.name }}</td>
                     <td>{{ expense.amount }}</td>
-                    <td>{{ expense.category.name }}</td>
+                    <td>{{ expense.category }}</td>
                     <td>{{ expense.date }}</td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{% url 'update_expense' expense.id %}">
+                            <a href="{% url 'update_budget_expense' expense.id %}">
                                 <button class="edit-btn">Edit</button>
                             </a>
-                            <a href="{% url 'delete_expense' expense.id %}" style="display:inline;">
+                            <a href="{% url 'delete_budget_expense' expense.id %}" style="display:inline;">
                                 <button type="submit" class="delete-btn">Delete</button>
                             </a>
                         </div>
@@ -45,6 +51,7 @@
             {% endfor %}
         </tbody>
     </table>
+
 
     <a href="{% url 'update_budget' budget.id %}" class="btn btn-primary">Update budget</a>
     <a href="{% url 'delete_budget' budget.id %}" class="btn btn-primary">Delete budget</a>

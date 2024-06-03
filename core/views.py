@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
-from expenses.models import Expense
+from expenses.models import Expense, Budget
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -38,6 +38,8 @@ class HomeView(LoginRequiredMixin, ListView):
         context['total_amount'] = total_amount
 
         context['expenses'] = self.get_queryset()
+
+        context['budgets'] = Budget.objects.filter(author=self.request.user)
 
         search_input = self.request.GET.get('search-area') or ''
         if search_input:
