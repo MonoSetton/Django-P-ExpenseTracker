@@ -1,14 +1,40 @@
 {% extends 'base.html' %}
-{% block title %} Budgets {% endblock %}
 {% load static %}
+{% block title %}Budgets{% endblock %}
+
 {% block content %}
-
-Budgets
-
-<a href="{% url 'create_budget' %}" class="btn btn-primary mb-3">Add Budget</a>
-<br>
-{% for budget in budgets %}
-    {{ budget }} <a href="{% url 'budget_details' budget.id %}">Details</a> <br>
-{% endfor %}
-
+<link href="{% static 'css/budget_list.css' %}" rel="stylesheet">
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Budgets</h1>
+        <a href="{% url 'create_budget' %}" class="btn btn-primary">Add New Budget</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Amount to Spend</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for budget in budgets %}
+                    <tr>
+                        <td><a href="{% url 'budget_details' budget.id %}">{{ budget.name }}</a></td>
+                        <td>{{ budget.amount_to_spend }}</td>
+                        <td>{{ budget.start_date }}</td>
+                        <td>{{ budget.end_date }}</td>
+                        <td>
+                            <a href="{% url 'update_budget' budget.id %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'delete_budget' budget.id %}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

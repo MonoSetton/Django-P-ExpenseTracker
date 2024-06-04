@@ -1,47 +1,50 @@
 {% extends 'base.html' %}
-{% block title %} Expenses {% endblock %}
+{% block title %}Expenses{% endblock %}
 {% load static %}
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/expenses.css' %}">
-<p>Total amount spent: -{{ total_amount }}</p>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Expense List</h1>
+        <a href="{% url 'create_expense' %}" class="btn btn-primary">Add Expense</a>
+    </div>
 
-<form method="GET">
-    <input type="text" name="search-area" value="{{ search_input }}">
-    <input type="submit" value="Search">
-</form>
+    <p class="lead">Total amount spent: {{ total_amount }}</p>
 
-<h1>Expense List</h1>
-<a href="{% url 'create_expense' %}" class="btn btn-primary mb-3">Add Expense</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for expense in expenses %}
+    <form method="GET" class="d-flex mb-4">
+        <input type="text" name="search-area" value="{{ search_input }}" class="form-control me-2" placeholder="Search expenses...">
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
                 <tr>
-                    <td>{{ expense.name }}</td>
-                    <td>{{ expense.amount }}</td>
-                    <td>{{ expense.category.name }}</td>
-                    <td>{{ expense.date }}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <a href="{% url 'update_expense' expense.id %}">
-                                <button class="edit-btn">Edit</button>
-                            </a>
-                            <a href="{% url 'delete_expense' expense.id %}" style="display:inline;">
-                                <button type="submit" class="delete-btn">Delete</button>
-                            </a>
-                        </div>
-                    </td>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.name }}</td>
+                        <td>{{ expense.amount }}</td>
+                        <td>{{ expense.category.name }}</td>
+                        <td>{{ expense.date }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'update_expense' expense.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{% url 'delete_expense' expense.id %}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

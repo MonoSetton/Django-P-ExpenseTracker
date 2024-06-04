@@ -1,61 +1,69 @@
 {% extends 'base.html' %}
-{% block title %} Details of {{ budget }} {% endblock %}
+{% block title %}Details of {{ budget }}{% endblock %}
 {% load static %}
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/expenses.css' %}">
 
 <div class="container mt-5">
-    <h1>{{ budget.name }}</h1>
-    <p>Created by: {{ budget.author }}</p>
-    <p>Amount to allocate: {{ budget.amount_to_spend }}</p>
-    <h2>Categories</h2>
-    <ul>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">{{ budget.name }}</h1>
+        <div>
+            <a href="{% url 'update_budget' budget.id %}" class="btn btn-warning me-2">Update Budget</a>
+            <a href="{% url 'delete_budget' budget.id %}" class="btn btn-danger me-2">Delete Budget</a>
+            <a href="{% url 'add_category_to_budget' budget.pk %}" class="btn btn-primary me-2">Add Category</a>
+            <a href="{% url 'add_expense_to_budget' budget.pk %}" class="btn btn-primary">Add Expense</a>
+        </div>
+    </div>
+
+    <p><strong>Created by:</strong> {{ budget.author }}</p>
+    <p><strong>Amount to allocate:</strong> {{ budget.amount_to_spend }}</p>
+
+    <h2 class="mt-4">Categories</h2>
+    <ul class="list-group mb-4">
         {% for budget_category in budget.budgetcategory_set.all %}
-            <li>{{ budget_category.category.name }}: {{ budget_category.value }}</li>
-        {% endfor %}
-        {% for category_info in category_totals %}
-            <h4>{{ category_info.category }}</h4>
-            <progress value="{{ category_info.total_amount }}" max="{{ category_info.category_budget }}"></progress>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ budget_category.category.name }}: {{ budget_category.value }}
+            </li>
         {% endfor %}
     </ul>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for expense in budget_expenses %}
+    {% for category_info in category_totals %}
+        <div class="mb-3">
+            <h4>{{ category_info.category }}</h4>
+            <progress class="form-range" value="{{ category_info.total_amount }}" max="{{ category_info.category_budget }}" style="width: 100%;"></progress>
+        </div>
+    {% endfor %}
+
+    <h2 class="mt-4">Expenses</h2>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
                 <tr>
-                    <td>{{ expense.name }}</td>
-                    <td>{{ expense.amount }}</td>
-                    <td>{{ expense.category }}</td>
-                    <td>{{ expense.date }}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <a href="{% url 'update_budget_expense' expense.id %}">
-                                <button class="edit-btn">Edit</button>
-                            </a>
-                            <a href="{% url 'delete_budget_expense' expense.id %}" style="display:inline;">
-                                <button type="submit" class="delete-btn">Delete</button>
-                            </a>
-                        </div>
-                    </td>
+                    <th scope="col">Name</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-
-    <a href="{% url 'update_budget' budget.id %}" class="btn btn-primary">Update budget</a>
-    <a href="{% url 'delete_budget' budget.id %}" class="btn btn-primary">Delete budget</a>
-    <a href="{% url 'add_category_to_budget' budget.pk %}" class="btn btn-primary">Add Category</a>
-    <a href="{% url 'add_expense_to_budget' budget.pk %}" class="btn btn-primary">Add Expense</a>
+            </thead>
+            <tbody>
+                {% for expense in budget_expenses %}
+                    <tr>
+                        <td>{{ expense.name }}</td>
+                        <td>{{ expense.amount }}</td>
+                        <td>{{ expense.category }}</td>
+                        <td>{{ expense.date }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'update_budget_expense' expense.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{% url 'delete_budget_expense' expense.id %}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
