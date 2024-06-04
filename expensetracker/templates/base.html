@@ -21,12 +21,6 @@
                     <ul class="navbar-nav ms-auto">
                         {{ user }}
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Option 1</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Option 2</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'budgets' %}">Budgets</a>
                         </li>
                         <li class="nav-item">
@@ -36,10 +30,10 @@
                             <a class="nav-link" href="{% url 'profile' %}">Profil</a>
                         </li>
                         <li class="nav-item">
-                                <form action="{% url 'logout' %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit">Logout</button>
-                                </form>
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit">Logout</button>
+                            </form>
                         </li>
                     </ul>
                 </div>

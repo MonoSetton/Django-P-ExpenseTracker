@@ -3,6 +3,7 @@ from .models import Expense, Category, Budget, BudgetCategory, BudgetExpense
 from django import forms
 import datetime
 from django.contrib.auth.models import User
+from django.db.models import Subquery
 
 
 class ExpenseForm(ModelForm):
@@ -26,11 +27,6 @@ class CategoryForm(ModelForm):
     class Meta:
         model = Category
         fields = ['name']
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
-        super().__init__(*args, **kwargs)
-        self.fields['budget'].queryset = Budget.objects.filter(author=user)
 
 
 class BudgetForm(ModelForm):

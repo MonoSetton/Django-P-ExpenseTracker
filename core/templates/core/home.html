@@ -50,12 +50,12 @@
       </thead>
       <tbody>
         {% for budget in budgets %}
-          <tr>
-            <td>{{ budget.name }}</td>
-            <td>{{ budget.amount_to_spend }}</td>
-            <td>{{ budget.start_date }}</td>
-            <td>{{ budget.end_date }}</td>
-          </tr>
+              <tr>
+                  <td><a href="{% url 'budget_details' budget.id %}">{{ budget.name }}</a></td>
+                <td>{{ budget.amount_to_spend }}</td>
+                <td>{{ budget.start_date }}</td>
+                <td>{{ budget.end_date }}</td>
+              </tr>
         {% endfor %}
       </tbody>
     </table>

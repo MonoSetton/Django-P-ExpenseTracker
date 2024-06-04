@@ -29,7 +29,7 @@ class SignupView(FormView):
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             return redirect('expenses')
-        return super(CustomLoginView, self).get(*args, **kwargs)
+        return super(SignupView, self).get(*args, **kwargs)
 
 
 class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
