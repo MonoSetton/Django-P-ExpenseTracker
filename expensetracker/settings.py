@@ -32,8 +32,8 @@ DEBUG = os.getenv('DEBUG')
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://https://django-expensetracker.up.railway.app',
-    'https://https://django-expensetracker.up.railway.app',
+    'http://django-expensetracker.up.railway.app',
+    'https://django-expensetracker.up.railway.app',
 ]
 
 
