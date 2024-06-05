@@ -1,0 +1,13 @@
+.scrollable-container {
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+a {
+    color: black;
+    text-decoration: none;
+}
