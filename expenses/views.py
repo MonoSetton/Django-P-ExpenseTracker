@@ -63,12 +63,14 @@ class CreateBudgetExpenseView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse_lazy('budget_details', kwargs={'pk': self.kwargs['pk']})
+
 
 class UpdateBudgetExpenseView(LoginRequiredMixin, UpdateView):
     model = BudgetExpense
     form_class = BudgetExpenseForm
     template_name = 'expenses/update_expense.html'
-    success_url = reverse_lazy('budgets')
     login_url = '/login/'
 
     def get_form_kwargs(self):
@@ -81,13 +83,18 @@ class UpdateBudgetExpenseView(LoginRequiredMixin, UpdateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse_lazy('budget_details', kwargs={'pk': self.get_object().category.budget.pk})
+
 
 class DeleteBudgetExpenseView(LoginRequiredMixin, DeleteView):
     model = BudgetExpense
     context_object_name = 'expense'
     template_name = 'expenses/delete_expense.html'
-    success_url = reverse_lazy('budgets')
     login_url = '/login/'
+
+    def get_success_url(self):
+        return reverse_lazy('budget_details', kwargs={'pk': self.get_object().category.budget.pk})
 
 
 class UpdateExpenseView(LoginRequiredMixin, UpdateView):
@@ -239,12 +246,29 @@ class AddCategoryToBudget(LoginRequiredMixin, CreateView):
     form_class = BudgetCategoryForm
     context_object_name = 'budget'
     template_name = 'expenses/add_budget_category.html'
-    success_url = reverse_lazy('budgets')
     login_url = '/login/'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['budget'] = get_object_or_404(Budget, pk=self.kwargs['pk'])
+        return kwargs
 
     def form_valid(self, form):
         budget = get_object_or_404(Budget, pk=self.kwargs['pk'])
         form.instance.budget = budget
         return super().form_valid(form)
 
+    def get_success_url(self):
+        budget_id = self.object.budget.id
+        return reverse_lazy('budget_details', kwargs={'pk': budget_id})
 
+
+class DeleteCategoryFromBudget(LoginRequiredMixin, DeleteView):
+    model = BudgetCategory
+    context_object_name = 'budget_category'
+    template_name = 'expenses/delete_budget_category.html'
+    login_url = '/login/'
+
+    def get_success_url(self):
+        budget_id = self.object.budget.id
+        return reverse_lazy('budget_details', kwargs={'pk': budget_id})

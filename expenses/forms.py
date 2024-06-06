@@ -48,6 +48,14 @@ class BudgetCategoryForm(ModelForm):
         model = BudgetCategory
         fields = ['category', 'value']
 
+    def __init__(self, *args, **kwargs):
+        budget = kwargs.pop('budget', None)
+        super().__init__(*args, **kwargs)
+        if budget:
+            self.fields['category'].queryset = Category.objects.exclude(
+                id__in=budget.budgetcategory_set.values_list('category_id', flat=True)
+            )
+
 
 class BudgetExpenseForm(ModelForm):
     date = forms.DateField(

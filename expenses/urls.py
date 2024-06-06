@@ -16,7 +16,8 @@ urlpatterns = [
     path('update_budget/<str:pk>', views.UpdateBudgetView.as_view(), name='update_budget'),
     path('delete_budgets/<str:pk>', views.DeleteBudgetView.as_view(), name='delete_budget'),
     path('budget/<str:pk>/add_category/', views.AddCategoryToBudget.as_view(), name='add_category_to_budget'),
-    path('budget/<str:pk>/add_expense', views.CreateBudgetExpenseView.as_view(), name='add_expense_to_budget'),
+    path('budget/<str:pk>/delete_category/', views.DeleteCategoryFromBudget.as_view(), name='delete_category_from_budget'),
+    path('budget/<str:pk>/add_expense/', views.CreateBudgetExpenseView.as_view(), name='add_expense_to_budget'),
     path('budget/update_budget_expense/<str:pk>', views.UpdateBudgetExpenseView.as_view(), name='update_budget_expense'),
     path('budget/delete_budget_expense/<str:pk>', views.DeleteBudgetExpenseView.as_view(), name='delete_budget_expense'),
     ]

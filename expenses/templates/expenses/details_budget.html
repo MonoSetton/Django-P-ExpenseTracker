@@ -24,6 +24,7 @@
         {% for budget_category in budget.budgetcategory_set.all %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{ budget_category.category.name }}: {{ budget_category.value }}
+                <a href="{% url 'delete_category_from_budget' budget_category.id %}" class="btn btn-sm btn-danger">Delete Category</a>
             </li>
         {% endfor %}
     </ul>
