@@ -41,27 +41,29 @@
 
         <div class="col-lg-6">
             <h2 class="mb-4">Budgets</h2>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Name</th>
-                            <th>Amount to Spend</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for budget in budgets %}
+            <div class="scrollable-container">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
                             <tr>
-                                <td><a href="{% url 'budget_details' budget.id %}">{{ budget.name }}</a></td>
-                                <td>${{ budget.amount_to_spend }}</td>
-                                <td>{{ budget.start_date }}</td>
-                                <td>{{ budget.end_date }}</td>
+                                <th>Name</th>
+                                <th>Amount to Spend</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for budget in budgets %}
+                                <tr>
+                                    <td><a href="{% url 'budget_details' budget.id %}">{{ budget.name }}</a></td>
+                                    <td>${{ budget.amount_to_spend }}</td>
+                                    <td>{{ budget.start_date }}</td>
+                                    <td>{{ budget.end_date }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/expenses.css' %}">
+<link rel="stylesheet" href="{% static 'css/budget_detail.css' %}">
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -32,7 +33,16 @@
     {% for category_info in category_totals %}
         <div class="mb-3">
             <h4>{{ category_info.category }}</h4>
-            <progress class="form-range" value="{{ category_info.total_amount }}" max="{{ category_info.category_budget }}" style="width: 100%;"></progress>
+            {{ category_info.total_amount }} / {{ category_info.category_budget }}
+            {% if category_info.total_amount > category_info.category_budget %}
+                <progress class="form-range progress-exceeded"
+                          value="{{ category_info.total_amount }}"
+                          max="{{ category_info.category_budget }}"></progress>
+            {% else %}
+                <progress class="form-range progress-normal"
+                          value="{{ category_info.total_amount }}"
+                          max="{{ category_info.category_budget }}"></progress>
+            {% endif %}
         </div>
     {% endfor %}
 
