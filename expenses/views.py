@@ -21,12 +21,6 @@ class ExpensesView(LoginRequiredMixin, ListView):
         context['total_amount'] = total_amount
         context['expenses'] = context['expenses'].filter(author=self.request.user)
 
-        search_input = self.request.GET.get('search-area') or ''
-        if search_input:
-            context['expenses'] = context['expenses'].filter(name__icontains=search_input)
-
-        context['search_input'] = search_input
-
         return context
 
 

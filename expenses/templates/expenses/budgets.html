@@ -4,13 +4,15 @@
 
 {% block content %}
 <link href="{% static 'css/budget_list.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3">Budgets</h1>
         <a href="{% url 'create_budget' %}" class="btn btn-primary">Add New Budget</a>
     </div>
     <div class="table-responsive">
-        <table class="table table-hover table-striped">
+        <table id="expenses-table" class="table table-hover table-striped">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Name</th>
@@ -37,4 +39,19 @@
         </table>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#expenses-table').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": 4 },
+                { "searchable": false, "targets": 4 }
+            ]
+        });
+    });
+</script>
+
 {% endblock %}
