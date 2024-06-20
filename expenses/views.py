@@ -183,7 +183,11 @@ class DetailsBudgetView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         budget = self.get_object()
-        context['budget_expenses'] = BudgetExpense.objects.filter(category__budget=budget)
+        budget_expenses = BudgetExpense.objects.filter(category__budget=budget)
+        context['budget_expenses'] = budget_expenses
+        sum_of_budget_expenses = budget_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
+        budget = self.get_object()
+        context['budget_left_to_allocate'] = budget.amount_to_spend - sum_of_budget_expenses
 
         category_totals = []
         budget_categories = BudgetCategory.objects.filter(budget=budget)
@@ -196,6 +200,7 @@ class DetailsBudgetView(LoginRequiredMixin, DetailView):
             })
 
         context['category_totals'] = category_totals
+
         return context
 
 
