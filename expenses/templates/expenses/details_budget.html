@@ -19,7 +19,11 @@
 
     <p><strong>Created by:</strong> {{ budget.author }}</p>
     <p><strong>Amount to allocate:</strong> {{ budget.amount_to_spend }}</p>
-    <p><strong>Amount left to allocate:</strong> {{ budget_left_to_allocate }}</p>
+    {% if amount_left_to_allocate > 0 %}
+        <p><strong>Amount left to allocate to categories:</strong> {{ amount_left_to_allocate }}</p>
+    {% else %}
+        <p style="color: red"><strong>Amount left to allocate to categories:</strong> {{ amount_left_to_allocate }}</p>
+    {% endif %}
 
     <h2 class="mt-4">Categories</h2>
     <ul class="list-group mb-4">

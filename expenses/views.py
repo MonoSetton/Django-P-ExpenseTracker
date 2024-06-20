@@ -185,9 +185,10 @@ class DetailsBudgetView(LoginRequiredMixin, DetailView):
         budget = self.get_object()
         budget_expenses = BudgetExpense.objects.filter(category__budget=budget)
         context['budget_expenses'] = budget_expenses
-        sum_of_budget_expenses = budget_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
-        budget = self.get_object()
-        context['budget_left_to_allocate'] = budget.amount_to_spend - sum_of_budget_expenses
+
+        categories_amount_sum = BudgetCategory.objects.filter(budget=budget).aggregate(Sum('value'))['value__sum'] or 0
+
+        context['amount_left_to_allocate'] = budget.amount_to_spend - categories_amount_sum
 
         category_totals = []
         budget_categories = BudgetCategory.objects.filter(budget=budget)
